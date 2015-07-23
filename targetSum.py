@@ -11,7 +11,33 @@ def targetSumNaive(arrayInts, targetNum):
             if eachNum != otherNum:
                 if arrayInts[eachNum] + arrayInts[otherNum] == targetNum:
                     return True
+    return False
                     
 
 def targetSumSorted(arrayInts, targetNum):
-    pass
+    arrayInts = sorted(arrayInts)
+    leftIndex = 0
+    rightIndex = len(arrayInts) - 1
+    while(leftIndex < rightIndex):
+        currentSum = arrayInts[leftIndex] + arrayInts[rightIndex]
+        if currentSum < targetNum:
+            leftIndex += 1
+        elif currentSum > targetNum:
+            rightIndex -= 1
+        else:
+            return True
+    return False
+
+
+def hasTargetSum(arrayInts, targetNum):
+    return targetSumNaive(arrayInts, targetNum)
+    
+def randomArray(arraySize):
+    import random
+    return [random.randint(0, 50) for x in xrange(arraySize)]
+
+def assertTargetSums(arrayInts, targetNum):
+    assert targetSumNaive(arrayInts, targetNum) == targetSumSorted(arrayInts, targetNum)
+
+for x in xrange(25):
+    assertTargetSums(randomArray(x * 3), x)
