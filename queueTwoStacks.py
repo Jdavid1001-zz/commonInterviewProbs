@@ -20,6 +20,13 @@ class StackImpl:
     
     def push(self, intVal):
         self.innerDeque.append(intVal)
+        
+def emptyStackIntoOtherStack(stack1, stack2):
+    while True:
+        try:
+            stack2.push(stack1.pop())
+        except IndexError:
+            return stack1, stack2
 
 class NaiveQueue:
     def __init__(self):
@@ -29,16 +36,23 @@ class NaiveQueue:
     def push(self, intVal):
         self.stackA.push(intVal)
         
-    def emptyStackIntoOtherStack(stack1, stack2):
-        while True:
-            try:
-                stack2.push(stack1.pop())
-            except IndexError:
-                return stack1, stack2
-        
     def pop(self):
-        stackA, stackB = self.emptyStackIntoOtherStack(self.stackA, self.stackB)
+        stackA, stackB = emptyStackIntoOtherStack(self.stackA, self.stackB)
         returnVal = stackB.pop()
-        self.stackA, self.stackB = self.emptyStackIntoOtherStack(stackA, stackB)
+        self.stackA, self.stackB = emptyStackIntoOtherStack(stackA, stackB)
         return returnVal
                 
+class NotSoNaiveQueue:
+    def __init__(self):
+        self.stackInbox = StackImpl()
+        self.stackOutbox = StackImpl()
+        
+    def push(self, intVal):
+        self.stackInbox.push(intVal)
+        
+    def pop(self):
+        try:
+            return self.stackOutbox.pop()
+        except IndexError:
+            self.stackInbox, self.stackOutbox = emptyStackIntoOtherStack(self.stackInbox, self.stackOutbox)
+            return self.stackOutbox.pop()
